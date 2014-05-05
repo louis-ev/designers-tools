@@ -144,6 +144,8 @@ a {
 .gallery-row { padding: 15px 0; }
 
 
+
+// page Story
 .story {
 	.main {
 		width: 18000px;
@@ -156,6 +158,59 @@ a {
 		}
 	}
 
+}
+
+// page Flux
+.flux {
+
+	#timeline {
+		position: relative;
+		height:50px;
+		max-width: 700px;
+		width:100%;
+		margin:auto;
+		margin-bottom: 50px;
+
+		.container {
+			top:0;
+			max-width: 700px;
+			width: 100%;
+			height: 50px;
+			background-color: #fff;
+			position: fixed;
+
+			.element {
+				height:100%;
+				width: 1px;
+				position: absolute;
+				background-color: #333;
+			}
+		}
+	}
+
+	article {
+		max-width: 700px;
+		margin: auto;
+		background-color: #fff;
+		padding: 15px;
+		bottom: 1px solid #eee;
+		margin-bottom: 15px;
+
+
+		.gmail_extra {
+			display: none;
+
+		}
+
+		.alignleft {
+			float: none;
+		}
+
+		&:first-child {
+			margin-top: 150px;
+
+		}
+	}
 
 
 }
