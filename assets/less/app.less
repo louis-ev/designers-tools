@@ -1,0 +1,207 @@
+/*!
+ * Roots 6.5.2
+ */
+
+/* @import "bootstrap/bootstrap.less"; */
+@import "semanticui/semantic.min.less";
+
+@grey: #363636;
+@blue: #0599B0;
+@green: #A4BD0A;
+@orange: #FFA615;
+@red: #FF2E00;
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+body {
+	background-color: #eee;
+	font-family: "proxima-nova";
+	color: @grey;
+	margin: 0;
+}
+
+a {
+	text-decoration: none !important;
+}
+
+/* ==========================================================================
+   Header
+   ========================================================================== */
+
+.banner { }
+
+
+
+/* ==========================================================================
+   Content
+   ========================================================================== */
+
+.content {
+	margin: auto;
+
+}
+
+/* ==========================================================================
+   Primary Content
+   ========================================================================== */
+
+
+
+.main {
+
+	width: 100%;
+	margin: auto;
+
+	article.item {
+
+
+		&:hover {
+			cursor: default !important;
+		}
+
+		&.inspace {
+			position: absolute !important;
+			max-height: 500px;
+			overflow: hidden;
+			transition: max-height 1s, color 1s;
+
+			&:hover {
+				color:#000 !important;
+				max-height: 1800px;
+			}
+		}
+
+		h1,h2 {
+			font-family: "proxima-nova";
+			color: @grey;
+			margin: 0;
+			text-decoration: none;
+		}
+
+		.meta {
+			font-weight: normal;
+			font-size: .8em;
+			margin: 0;
+			text-align: left !important;
+			float:none !important;
+			margin-bottom: 1rem;
+
+			time,auteur {
+				display: inline-block;
+			}
+
+			auteur {
+				float: right;
+				a {
+					color: @grey;
+				}
+			}
+		}
+
+		.entry-summary {
+			width:100%;
+			overflow: hidden;
+
+
+			embed, img, video {
+				max-width: 100%;
+				height: auto;
+			}
+
+			a {
+				word-break: break-all;
+			}
+
+			.gmail_quote, .gmail_extra {
+				display: none;
+			}
+
+			&[data-auteur="1"] {}
+
+		}
+
+	}
+
+	.backgrid {
+		position: absolute;
+		top: 0;
+		margin-left: 5%;
+		width: 90%;
+		z-index: -1;
+
+		hr {
+			border:none;
+			border-bottom: 1px solid #fff;
+			margin: 0;
+			height: 60px;
+		}
+	}
+}
+
+/* Gallery Shortcode */
+.gallery-row { padding: 15px 0; }
+
+
+.story {
+	.main {
+		width: 18000px;
+
+		article.item {
+			position: relative !important;
+			top: 0 !important;
+			left: 0 !important;
+			display: inline-block;
+		}
+	}
+
+
+
+}
+
+
+/* ==========================================================================
+   Sidebar
+   ========================================================================== */
+
+.sidebar { }
+
+
+
+/* ==========================================================================
+   Posts
+   ========================================================================== */
+
+.hentry header { }
+.hentry time { }
+.hentry .byline { }
+.hentry .entry-content { }
+.hentry footer { }
+
+
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.content-info { }
+
+
+
+/* ==========================================================================
+   WordPress Generated Classes
+   See: http://codex.wordpress.org/CSS#WordPress_Generated_Classes
+   ========================================================================== */
+
+.aligncenter { display: block; margin: 0 auto; }
+.alignleft { float: left; }
+.alignright { float: right; }
+figure.alignnone { margin-left: 0; margin-right: 0; }
+
+
+
+/* ==========================================================================
+   Media Queries
+   ========================================================================== */
+
