@@ -1,4 +1,4 @@
-<?php //get_template_part('templates/page', 'header'); ?>
+<?php get_template_part('templates/page', 'header'); ?>
 
 <?php if (!have_posts()) : ?>
   <div class="alert alert-warning">
@@ -7,20 +7,9 @@
   <?php get_search_form(); ?>
 <?php endif; ?>
 
-<div class="ui stackable items">
 <?php while (have_posts()) : the_post(); ?>
   <?php get_template_part('templates/content', get_post_format()); ?>
 <?php endwhile; ?>
-</div>
-
-<div class="backgrid">
-<?php
-for ($x=0; $x<=280; $x++)
-  {
-  echo "<hr>";
-  }
-?>
-</div>
 
 <?php if ($wp_query->max_num_pages > 1) : ?>
   <nav class="post-nav">
