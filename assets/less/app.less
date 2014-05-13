@@ -174,15 +174,22 @@ a {
 		width: 150px;
 		margin: auto;
 		margin-bottom: 50px;
+		overflow: scroll;
+
+		#scrollZone {
+			height: 24000px;
+			width: 100%;
+			position: relative;
+			z-index: 5;
+		}
 
 		.container {
 
-			position: absolute;
+			position: fixed;
 			top:0;
 			width: 100px;
 			height: 100%;
 			border:1px solid #eee;
-
 			#navID {
 				position: absolute;
 				background-color: #333;
@@ -221,45 +228,47 @@ a {
 	}
 
 	#cropwindow {
-		height: 24000px;
+		height: 800px;
+		height: 100vh;
 		max-width: 700px;
 		margin: auto;
 		position:relative;
+		overflow: scroll;
 
 		#cropcontent {
-			height: 100%;
-			position: fixed;
+
+			position: relative;
 			transition: all .3s ease-out;
+
+			article {
+				max-width: 700px;
+				margin: auto;
+				padding: 15px;
+				margin-bottom: 15px;
+
+
+				&.active {
+					background-color: #333;
+					color:#fff;
+
+				}
+
+				.gmail_extra {
+					display: none;
+
+				}
+
+				.alignleft {
+					float: none;
+				}
+
+				&:first-child {
+
+
+				}
+			}
 		}
 
-	}
-
-	article {
-		max-width: 700px;
-		margin: auto;
-		padding: 15px;
-		margin-bottom: 15px;
-
-
-		&.active {
-			background-color: #333;
-			color:#fff;
-
-		}
-
-		.gmail_extra {
-			display: none;
-
-		}
-
-		.alignleft {
-			float: none;
-		}
-
-		&:first-child {
-
-
-		}
 	}
 
 

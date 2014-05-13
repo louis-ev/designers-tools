@@ -12,6 +12,8 @@ $getallposts = new WP_Query( array(
 
 
 <nav id="timeline">
+	<div id="scrollZone">
+	</div>
 	<div class="container">
 
 	<?php
@@ -47,26 +49,25 @@ $getallposts = new WP_Query( array(
 
 
 <div id="cropwindow">
-<div id="cropcontent">
-	<?php while ($getallposts->have_posts()) : $getallposts->the_post() ?>
-		<article data-post="<?php the_ID(); ?>" <?php post_class(); ?> style="">
-				<div class="content">
-					<header class="name">
-						<div class="meta">
-							<?php get_template_part('templates/entry-meta'); ?>
+	<div id="cropcontent">
+		<?php while ($getallposts->have_posts()) : $getallposts->the_post() ?>
+			<article data-post="<?php the_ID(); ?>" <?php post_class(); ?> style="">
+					<div class="content">
+						<header class="name">
+							<div class="meta">
+								<?php get_template_part('templates/entry-meta'); ?>
+							</div>
+							<a href="<?php the_permalink(); ?>"><h2><?php the_title(); ?></h2></a>
+						</header>
+						<div class="entry-summary description">
+							<?php the_content(); ?>
 						</div>
-						<a href="<?php the_permalink(); ?>"><h2><?php the_title(); ?></h2></a>
-					</header>
-					<div class="entry-summary description">
-						<?php the_content(); ?>
 					</div>
-				</div>
-		</article>
+			</article>
 
-
-	<?php endwhile; ?>
+		<?php endwhile; ?>
+	</div>
 </div>
-			</div>
 
 
 
