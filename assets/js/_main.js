@@ -1,18 +1,33 @@
-/* ========================================================================
- * DOM-based Routing
- * Based on http://goo.gl/EUTi53 by Paul Irish
- *
- * Only fires on body classes that match. If a body class contains a dash,
- * replace the dash with an underscore when adding it to the object below.
- *
- * .noConflict()
- * The routing is enclosed within an anonymous function so that you can
- * always reference jQuery with $, even when in .noConflict() mode.
- *
- * Google CDN, Latest jQuery
- * To use the default WordPress version of jQuery, go to lib/config.php and
- * remove or comment out: add_theme_support('jquery-cdn');
- * ======================================================================== */
+
+function elementProche ( modwscrollTop ) {
+	var dist = 0;
+	var pDist = 10000000000;
+	var titreactif;
+	//optimisation : stocker le numéro d'article plutôt que l'article : http://jsperf.com/jquery-each-this-vs-eq-index
+	var numTitre = -1;
+	var $titres = $('#timeline .element');
+	$titres.each(function(index) {
+		dist =  (document.documentElement.offsetHeight * ( $(this).position().top / document.documentElement.clientHeight ) ) - modwscrollTop;
+/*console.log("$(this).offset().top : " + $(this).position().top + " (document.documentElement.offsetHeight * ( $(this).offset().top / document.documentElement.clientHeight ) )  : " + (document.documentElement.offsetHeight * ( $(this).offset().top / document.documentElement.clientHeight ) )  + " dist : " + dist); */
+
+		if (dist > 0 && dist < pDist) {
+			pDist = dist;
+			numTitre = index;
+		}
+
+	});
+	if ( numTitre !== -1 ) {
+		titreactif = $titres.eq(numTitre);
+		return titreactif;
+	}
+	return false;
+}
+
+function scrolltop(eles) {
+    $('#cropcontent').css( "top", -eles.position().top );
+}
+
+
 
 (function($) {
 
@@ -25,7 +40,6 @@ var Roots = {
       // JavaScript to be fired on all pages
     }
   },
-  // Home page
   home: {
     init: function() {
 
@@ -35,12 +49,52 @@ var Roots = {
 		});
     }
   },
-  // About us page, note the change from about-us to about_us.
-  about_us: {
+  flux: {
     init: function() {
-      // JavaScript to be fired on the about us page
+		console.log("load");
+
+		// on créé la ligne qui se balade dans la nav de gauche
+		$("#timeline .container").append("<nav id='navID'></nav>");
+
+		//var titreVu = elementProche(window.pageYOffset);
+
+		$(window).scroll(function() {
+
+			console.log("scroll");
+
+			var posScrollPage = window.pageYOffset;
+			var scrollRemappedWindow = document.documentElement.clientHeight / document.documentElement.offsetHeight;
+			var remappedScroll = posScrollPage / document.documentElement.offsetHeight * document.documentElement.clientHeight;
+
+			console.log("scroll");
+
+			$("#navID").css("top", remappedScroll );
+
+			var newTitreVu = elementProche( window.pageYOffset );
+			console.log(newTitreVu);
+
+			if ( newTitreVu !== false ) {
+
+				$('#timeline .element').removeClass("active");
+				$('.content article').removeClass("active");
+				var lienNav = $('.content article').filter(function() {
+					return $(this).attr('data-post') === newTitreVu.attr("data-post");
+				});
+				lienNav.addClass("active");
+				newTitreVu.addClass("active");
+				console.log("activated");
+
+				scrolltop (lienNav);
+
+				titreVu = newTitreVu;
+
+			}
+
+		});
+
     }
   }
+
 };
 
 // The routing fires all common scripts, followed by the page specific scripts.

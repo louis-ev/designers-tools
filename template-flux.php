@@ -37,7 +37,7 @@ $getallposts = new WP_Query( array(
 				$minpassedpercent = ( $minpassed / $oldestpostUnix ) *100;
 
 				?>
-				<div class="element" <?php post_class(); ?> style="left: <?php echo $minpassedpercent ?>%;" data-auteur="<?php echo get_the_author_meta('ID')?>" data-minutesecoulees="<?php echo $minpassed ?>">
+				<div data-post="<?php the_ID(); ?>" class="element" <?php post_class(); ?> style="top: <?php echo $minpassedpercent ?>%;" data-auteur="<?php echo get_the_author_meta('ID')?>" data-minutesecoulees="<?php echo $minpassed ?>">
 					<div class="content">
 					</div>
 				</div>
@@ -46,25 +46,27 @@ $getallposts = new WP_Query( array(
 </nav>
 
 
-<div class="">
+<div id="cropwindow">
+<div id="cropcontent">
 	<?php while ($getallposts->have_posts()) : $getallposts->the_post() ?>
-		<article <?php post_class(); ?> style="">
-			<div class="content">
-				<header class="name">
-					<div class="meta">
-						<?php get_template_part('templates/entry-meta'); ?>
+		<article data-post="<?php the_ID(); ?>" <?php post_class(); ?> style="">
+				<div class="content">
+					<header class="name">
+						<div class="meta">
+							<?php get_template_part('templates/entry-meta'); ?>
+						</div>
+						<a href="<?php the_permalink(); ?>"><h2><?php the_title(); ?></h2></a>
+					</header>
+					<div class="entry-summary description">
+						<?php the_content(); ?>
 					</div>
-					<a href="<?php the_permalink(); ?>"><h2><?php the_title(); ?></h2></a>
-				</header>
-				<div class="entry-summary description">
-					<?php the_content(); ?>
 				</div>
-			</div>
 		</article>
 
 
 	<?php endwhile; ?>
 </div>
+			</div>
 
 
 
