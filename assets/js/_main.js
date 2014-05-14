@@ -1,3 +1,15 @@
+function resizeRectMatchPost () {
+	var contentHeight = $("#cropcontent").height();
+	$("#timeline .element").each(function () {
+		$that = $(this);
+		var lienNav = $('.content article').filter(function() {
+			return $(this).attr('data-post') === $that.attr("data-post");
+		});
+		var mappedHeight = lienNav.height() / contentHeight;
+		console.log(" lienNav.offset().height :  " + lienNav.height() + " $('#cropcontent').offset().height "  + contentHeight );
+		$(this).height( mappedHeight * $("#timeline").height() );
+	});
+}
 
 function elementProche ( $titres, modwscrollTop ) {
 	var dist = 0;
@@ -13,6 +25,12 @@ function elementProche ( $titres, modwscrollTop ) {
 
 //console.log("$(this).position().top : " + $(this).position().top + " (document.documentElement.offsetHeight * ( $(this).offset().top / document.documentElement.clientHeight ) )  : " + (document.documentElement.offsetHeight * ( $(this).offset().top / document.documentElement.clientHeight ) )  + " dist : " + dist);
 
+		if (dist > 0 && dist < pDist) {
+			pDist = dist;
+			numTitre = index;
+		}
+
+		dist =  ($(this).position().top + $(this).height())  - modwscrollTop;
 		if (dist > 0 && dist < pDist) {
 			pDist = dist;
 			numTitre = index;
@@ -122,95 +140,99 @@ var Roots = {
     init: function() {
 		console.log("load");
 
-		// on créé la ligne qui se balade dans la nav de gauche
-		$("#timeline .container").append("<nav id='navID'></nav>");
+		$(window).load(function() {
 
-		// on donne à la zone de scroll timeline la taille qu'il faut
-		$("#scrollZone").css("height", $("main #cropcontent").css("height"));
+			// on créé la ligne qui se balade dans la nav de gauche
+			$("#timeline .container").append("<nav id='navID'></nav>");
 
-		//var titreVu = elementProche(window.pageYOffset);
+			// on donne à la zone de scroll timeline la taille qu'il faut
+			$("#scrollZone").css("height", $("main #cropcontent").css("height"));
 
-		// check du scroll pour éviter que les evts déclenchent le scroll
-		var scrollinTimeline = false;
-		var scrollinCropwindow = false;
+			// on donne à chaque rect la taille qu'il faut
+			resizeRectMatchPost();
 
-		// scroll sur timeline
-		$("#timeline").scroll(function() {
+			// check du scroll pour éviter que les evts déclenchent le scroll
+			var scrollinTimeline = false;
+			var scrollinCropwindow = false;
 
-			if ($("#timeline").is(':animated') || scrollinCropwindow === true ) {
-				console.log("catched timelinescroll");
-				return;
-			}
+			// scroll sur timeline
+			$("#timeline").scroll(function() {
 
-			scrollinTimeline = true;
+				if ($("#timeline").is(':animated') || scrollinCropwindow === true ) {
+					console.log("catched timelinescroll");
+					return;
+				}
 
-			console.log("timeline");
+				scrollinTimeline = true;
 
-			// hauteur relative à la page
-			var remappedScroll = updatePosNavID();
+				console.log("timeline");
 
-			var elementVu = quelElementVu ( $('#timeline .element'), remappedScroll);
+				// hauteur relative à la page
+				var remappedScroll = updatePosNavID();
 
-			var postVu = activePost ( elementVu );
+				var elementVu = quelElementVu ( $('#timeline .element'), remappedScroll);
 
-			scrollTo ( "#cropwindow", postVu );
+				var postVu = activePost ( elementVu );
 
-		});
+				scrollTo ( "#cropwindow", postVu );
 
-		// scroll sur articles
-		$("#cropwindow").scroll(function() {
+			});
 
-			if ($("#cropwindow").is(':animated') || scrollinTimeline === true) {
-				console.log("catched cropwindowscroll");
-				return;
-			}
+			// scroll sur articles
+			$("#cropwindow").scroll(function() {
 
-			scrollinCropwindow = true;
+				if ($("#cropwindow").is(':animated') || scrollinTimeline === true) {
+					console.log("catched cropwindowscroll");
+					return;
+				}
 
-			console.log("cropwindow");
+				scrollinCropwindow = true;
 
-			var scrollState = $("#cropwindow").scrollTop();
+				console.log("cropwindow");
 
-
-			// l'article en vu
-			var elementVu = quelElementVu ( $('#cropwindow article'), scrollState);
-
-			// on trouve le rect qui correspond dans la timeline
-			var rectVu = activeRect ( elementVu );
-
-			// on place le scroll dessus, et le repère sur le scroll
-			$("#timeline").scrollTop(scrollState);
-
-			// hauteur relative à la page
+				var scrollState = $("#cropwindow").scrollTop();
 
 
+				// l'article en vu
+				var elementVu = quelElementVu ( $('#cropwindow article'), scrollState);
 
-			//console.log("elementVu : ");
-			//console.log( elementVu );
+				// on trouve le rect qui correspond dans la timeline
+				var rectVu = activeRect ( elementVu );
 
-			//var postVu = activePost ( elementVu );
+				// on place le scroll dessus, et le repère sur le scroll
+				$("#timeline").scrollTop(scrollState);
 
-			//scrollTo ( "#cropwindow", postVu );
+				// hauteur relative à la page
 
-			//var postVu = activeRect ( elementVu );
 
-			//scrollTo ( "#timeline", postVu );
 
-		});
+				//console.log("elementVu : ");
+				//console.log( elementVu );
 
-        $("#cropwindow").on('scrollstop', function() {
-			console.log("cropwindowstop");
-			if ( scrollinCropwindow === true) {
-				scrollinTimeline = false;
-				scrollinCropwindow = false;
-			}
-		});
-        $("#timeline").on('scrollstop', function() {
-			console.log("timelinestop");
-			if ( scrollinTimeline === true) {
-				scrollinTimeline = false;
-				scrollinCropwindow = false;
-			}
+				//var postVu = activePost ( elementVu );
+
+				//scrollTo ( "#cropwindow", postVu );
+
+				//var postVu = activeRect ( elementVu );
+
+				//scrollTo ( "#timeline", postVu );
+
+			});
+
+			$("#cropwindow").on('scrollstop', function() {
+				console.log("cropwindowstop");
+				if ( scrollinCropwindow === true) {
+					scrollinTimeline = false;
+					scrollinCropwindow = false;
+				}
+			});
+			$("#timeline").on('scrollstop', function() {
+				console.log("timelinestop");
+				if ( scrollinTimeline === true) {
+					scrollinTimeline = false;
+					scrollinCropwindow = false;
+				}
+			});
 		});
     }
   }
