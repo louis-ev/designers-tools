@@ -11,6 +11,15 @@ function resizeRectMatchPost () {
 	});
 }
 
+$.extend($.easing,
+{
+    easeInOutQuint: function (x, t, b, c, d) {
+        if ((t/=d/2) < 1) return c/2*t*t*t*t*t + b;
+        return c/2*((t-=2)*t*t*t*t + 2) + b;
+    }
+
+});
+
 function elementProche ( $titres, modwscrollTop ) {
 	var dist = 0;
 	var pDist = 10000000000;
@@ -47,10 +56,22 @@ function elementProche ( $titres, modwscrollTop ) {
 
 function scrollTo( container, eles) {
 //	console.log("scrolltop : " + eles[0] );
+/*
 	$(container)
 		.scrollTop(
 			eles[0].offsetTop
 		);
+*/
+	$(container).animate({
+		scrollTop : eles[0].offsetTop
+	}, {
+		queue: false,
+		duration: 400,
+		easing: "easeInOutQuint"
+    });
+
+
+
 }
 
 function updatePosNavID () {
@@ -159,7 +180,7 @@ var Roots = {
 			// check du scroll pour éviter que les evts déclenchent le scroll
 			var scrollinTimeline = false;
 			var scrollinCropwindow = false;
-			var pelementVu;
+			var pelementVu =  quelElementVu ( $('#timeline .element'), 0);
 
 			// scroll sur timeline
 			$("#timeline").scroll(function() {
@@ -171,14 +192,17 @@ var Roots = {
 
 				scrollinTimeline = true;
 
-				console.log("timeline");
+//				console.log("timeline");
 
 				// hauteur relative à la page
 				var remappedScroll = updatePosNavID();
 
 				var elementVu = quelElementVu ( $('#timeline .element'), remappedScroll);
 
-				if ( elementVu !== pelementVu ) {
+				if ( elementVu.data("post") !== pelementVu.data("post") ) {
+					console.log("diffElement");
+					console.log(pelementVu);
+					console.log(elementVu);
 					pelementVu = elementVu;
 					var postVu = activePost ( elementVu );
 					scrollTo ( "#cropwindow", postVu );
