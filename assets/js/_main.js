@@ -2,7 +2,7 @@ function resizeRectMatchPost () {
 	var contentHeight = $("#cropcontent").height();
 	$("#timeline .element").each(function () {
 		$that = $(this);
-		var lienNav = $('.content article').filter(function() {
+		var lienNav = $('#content article').filter(function() {
 			return $(this).attr('data-post') === $that.attr("data-post");
 		});
 		var mappedHeight = lienNav.height() / contentHeight;
@@ -74,8 +74,8 @@ function activePost ( elsViewed ) {
 	if ( newTitreVu !== false ) {
 
 		$('#timeline .element').removeClass("active");
-		$('.content article').removeClass("active");
-		var lienNav = $('.content article').filter(function() {
+		$('#content article').removeClass("active");
+		var lienNav = $('#content article').filter(function() {
 			return $(this).attr('data-post') === newTitreVu.attr("data-post");
 		});
 		lienNav.addClass("active");
@@ -97,7 +97,7 @@ function activeRect ( elsViewed ) {
 	if ( newTitreVu !== false ) {
 
 		$('#timeline .element').removeClass("active");
-		$('.content article').removeClass("active");
+		$('#content article').removeClass("active");
 		var lienNav = $('#timeline .element').filter(function() {
 			return $(this).attr('data-post') === newTitreVu.attr("data-post");
 		});
@@ -142,10 +142,15 @@ var Roots = {
 
 		$(window).load(function() {
 
+			// on retire toutes les PJ de la colonne des articles
+			$("article img").each(function () {
+				$(this).appendTo("#attachmentCol");
+			});
+
 			// on créé la ligne qui se balade dans la nav de gauche
 			$("#timeline .container").append("<nav id='navID'></nav>");
 
-			// on donne à la zone de scroll timeline la taille qu'il faut
+			// on donne à la zone de scroll timeline la taille du maincontent
 			$("#scrollZone").css("height", $("main #cropcontent").css("height"));
 
 			// on donne à chaque rect la taille qu'il faut
@@ -154,6 +159,7 @@ var Roots = {
 			// check du scroll pour éviter que les evts déclenchent le scroll
 			var scrollinTimeline = false;
 			var scrollinCropwindow = false;
+			var pelementVu;
 
 			// scroll sur timeline
 			$("#timeline").scroll(function() {
@@ -172,9 +178,11 @@ var Roots = {
 
 				var elementVu = quelElementVu ( $('#timeline .element'), remappedScroll);
 
-				var postVu = activePost ( elementVu );
-
-				scrollTo ( "#cropwindow", postVu );
+				if ( elementVu !== pelementVu ) {
+					pelementVu = elementVu;
+					var postVu = activePost ( elementVu );
+					scrollTo ( "#cropwindow", postVu );
+				}
 
 			});
 

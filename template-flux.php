@@ -50,14 +50,21 @@ $getallposts = new WP_Query( array(
 
 <div id="cropwindow">
 	<div id="cropcontent">
-		<?php while ($getallposts->have_posts()) : $getallposts->the_post() ?>
+		<?php
+
+			global $wp_query;
+			$wp_query->in_the_loop = true;
+
+			while ($getallposts->have_posts()) : $getallposts->the_post() ?>
 			<article data-post="<?php the_ID(); ?>" <?php post_class(); ?> style="">
-					<div class="content">
+					<div class="content fee-group">
+					  <div class="fee-buttons"></div>
 						<header class="name">
 							<div class="meta">
 								<?php get_template_part('templates/entry-meta'); ?>
 							</div>
-							<a href="<?php the_permalink(); ?>"><h2><?php the_title(); ?></h2></a>
+							<a title="Permanent Link to <?php the_title_attribute(); ?>" href="<?php the_permalink() ?>"><h2><?php the_title(); ?></h2></a>
+
 						</header>
 						<div class="entry-summary description">
 							<?php the_content(); ?>
@@ -69,7 +76,11 @@ $getallposts = new WP_Query( array(
 	</div>
 </div>
 
+<div id="attachmentCol">
 
+
+
+</div>
 
 <?php if ($wp_query->max_num_pages > 1) : ?>
   <nav class="post-nav">

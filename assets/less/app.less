@@ -53,6 +53,7 @@ a {
 
 	width: 100%;
 	margin: auto;
+	position: fixed;
 
 	article {
 
@@ -166,126 +167,152 @@ a {
 // page Flux
 .flux {
 
-	#timeline {
+	#content {
 
-		position: fixed;
-		height: 100%;
-		top: 0;
-		left: 10%;
-		width: 150px;
+		width:90%;
 		margin: auto;
-		margin-bottom: 50px;
-		overflow: scroll;
 
-		#scrollZone {
-			height: 24000px;
-			width: 100%;
-			position: relative;
-			z-index: 5;
-		}
+		.main {
 
-		.container {
 
-			position: fixed;
-			top:0;
-			width: 100px;
-			height: 100%;
-			border:1px solid #eee;
+			#timeline {
 
-			#navID {
-				position: absolute;
-				background-color: #333;
-				width:150px;
-				height:2px;
-				margin-left: -25px;
-				z-index: 0;
-			}
-
-			.element {
-				height:15px;
-				width: 33%;
-				position: absolute;
-				background-color: rgba(150,150,150,.4);
-				//border: 3px solid @green;
-				border-top: 0px solid #aaa;
-
-				&.active {
-					background-color: @orange;
-				}
-
-				&::before {
-
-				}
-
-				&:nth-child(4n+1) {
-					margin-left: 25%;
-					border-color: @orange;
-				}
-				&:nth-child(4n+2) {
-					margin-left: 50%;
-					border-color: @red;
-				}
-				&:nth-child(4n+3) {
-					margin-left: 75%;
-					border-color: @blue;
-				}
-
-			}
-		}
-	}
-
-	#cropwindow {
-		height: 800px;
-		height: 100vh;
-		max-width: 700px;
-		margin: auto;
-		position:relative;
-		overflow: scroll;
-
-		#cropcontent {
-
-			position: relative;
-			transition: all .3s ease-out;
-
-			article {
-				max-width: 700px;
+				position: relative;
+				display: inline-block;
+				height: 100vh;
+				width: 10%;
 				margin: auto;
-				padding: 15px;
-				margin-bottom: 15px;
+				overflow: scroll;
+				vertical-align: top;
 
+				#scrollZone {
+					height: 24000px;
+					width: 100%;
+					position: relative;
+					z-index: 5;
+				}
 
-				&.active {
-					background-color: #333;
-					color:#fff;
+				.container {
 
-					span {
-						color:#fff;
+					position: fixed;
+					top:0;
+					width: 100px;
+					height: 100%;
+					border:1px solid #eee;
+
+					#navID {
+						position: absolute;
+						background-color: #333;
+						width:150px;
+						height:2px;
+						margin-left: -25px;
+						z-index: 0;
 					}
 
-					h2 {
-						color: #fff;
+					.element {
+						height:15px;
+						width: 33%;
+						min-height: 2px;
+						position: absolute;
+						background-color: rgba(150,150,150,.4);
+						//border: 3px solid @green;
+						border-top: 0px solid #aaa;
+						transition: all .3s;
+
+						&.active {
+							background-color: @orange;
+						}
+
+						&::before {
+
+						}
+
+						&[data-auteur='2'] {
+							margin-left: 25%;
+							border-color: @orange;
+						}
+						&[data-auteur='3'] {
+							margin-left: 50%;
+							border-color: @red;
+						}
+						&[data-auteur='4'] {
+							margin-left: 75%;
+							border-color: @blue;
+						}
+
+					}
+				}
+			}
+
+			#cropwindow {
+				height: 800px;
+				height: 100vh;
+				display: inline-block;
+				max-width: 700px;
+				width: 44%;
+				margin: auto;
+				position:relative;
+				overflow: scroll;
+				vertical-align: top;
+
+				#cropcontent {
+
+					position: relative;
+					transition: all .3s ease-out;
+
+					article {
+						max-width: 700px;
+						margin: auto;
+						padding: 15px;
+						margin-bottom: 15px;
+
+
+						&.active {
+							background-color: #333;
+							color:#fff;
+
+							span {
+								color:#fff;
+							}
+
+							h2 {
+								color: #fff;
+							}
+						}
+
+						.gmail_extra {
+							display: none;
+
+						}
+
+						.alignleft {
+							float: none;
+						}
+
+						&:first-child {
+
+
+						}
 					}
 				}
 
-				.gmail_extra {
-					display: none;
+			}
 
-				}
+			#attachmentCol {
+				width: 45%;
+				height: 100vh;
+				overflow: scroll;
+				vertical-align: top;
+				position: relative;
+				display: inline-block;
 
-				.alignleft {
-					float: none;
-				}
-
-				&:first-child {
-
-
+				img {
+					max-width: 100%;
+					height: auto;
 				}
 			}
 		}
-
 	}
-
-
 }
 
 
