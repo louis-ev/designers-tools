@@ -14,7 +14,7 @@ function resizeRectMatchPost () {
 $.extend($.easing,
 {
     easeInOutQuint: function (x, t, b, c, d) {
-        if ((t/=d/2) < 1) return c/2*t*t*t*t*t + b;
+        if ((t = t / (d / 2)) < 1) { return c/2*t*t*t*t*t + b; }
         return c/2*((t-=2)*t*t*t*t + 2) + b;
     }
 
@@ -66,7 +66,7 @@ function scrollTo( container, eles) {
 		scrollTop : eles[0].offsetTop
 	}, {
 		queue: false,
-		duration: 400,
+		duration: 200,
 		easing: "easeInOutQuint"
     });
 
@@ -88,19 +88,14 @@ function quelElementVu ( elements, posScrollGlobal ) {
 
 }
 
-function activePost ( elsViewed ) {
+function activeElemnts ( elesVu, $where ) {
 
-	var newTitreVu = elsViewed;
+	if ( elesVu !== false ) {
 
-	if ( newTitreVu !== false ) {
-
-		$('#timeline .element').removeClass("active");
-		$('#content article').removeClass("active");
-		var lienNav = $('#content article').filter(function() {
-			return $(this).attr('data-post') === newTitreVu.attr("data-post");
+		var lienNav = $where.filter(function() {
+			return $(this).attr('data-post') === elesVu.attr("data-post");
 		});
 		lienNav.addClass("active");
-		newTitreVu.addClass("active");
 /*
 		console.log("activated");
 		console.log(lienNav);
@@ -110,30 +105,6 @@ function activePost ( elsViewed ) {
 	}
 	return false;
 }
-
-function activeRect ( elsViewed ) {
-
-	var newTitreVu = elsViewed;
-
-	if ( newTitreVu !== false ) {
-
-		$('#timeline .element').removeClass("active");
-		$('#content article').removeClass("active");
-		var lienNav = $('#timeline .element').filter(function() {
-			return $(this).attr('data-post') === newTitreVu.attr("data-post");
-		});
-		lienNav.addClass("active");
-		newTitreVu.addClass("active");
-/*
-		console.log("activated");
-		console.log(lienNav);
-*/
-
-		return lienNav;
-	}
-	return false;
-}
-
 
 
 
@@ -165,7 +136,39 @@ var Roots = {
 
 			// on retire toutes les PJ de la colonne des articles
 			$("article img").each(function () {
-				$(this).appendTo("#attachmentCol");
+				console.log( '$(this).closest("article").data("post") : ' + $(this).closest("article").data("post") );
+
+				var datapost = $(this).closest("article").data("post");
+
+				//other stuff
+				if ($(this).parent("a").length) {
+					$(this).closest("a").appendTo("#attachmentCol").attr("target", "_blank").attr("data-post", datapost );
+				}
+				else {
+					$(this).wrap("<a href='" + $(this).attr("src") + "'></a>").parent().appendTo("#attachmentCol").attr("target", "_blank").attr("data-post", datapost );
+
+				}
+
+			});
+
+			// placer les pieces jointes en abs et en hauteur
+/*
+			$("#attachmentCol a").each(function () {
+				$that = $(this);
+				var eles = $("#cropwindow article").filter(function() {
+					return $(this).attr('data-post') === $that.attr("data-post");
+				});
+				$(this).css("top", eles.offset().top);
+			});
+*/
+
+			// on supprime les styles dans les mails
+			$("article .entry-summary *").removeAttr( 'style' );
+
+			// on place les apercu de mail de la timeline a la bonne hauteur d'après leur data-ancienetepercent
+			$("#timeline .element").each( function () {
+				$(this).css("top", $(this).data("ancienetepercent") * $("main #timeline .container").height() );
+				$(this).css("opacity", 1);
 			});
 
 			// on créé la ligne qui se balade dans la nav de gauche
@@ -174,18 +177,20 @@ var Roots = {
 			// on donne à la zone de scroll timeline la taille du maincontent
 			$("#scrollZone").css("height", $("main #cropcontent").css("height"));
 
+
 			// on donne à chaque rect la taille qu'il faut
 			resizeRectMatchPost();
 
 			// check du scroll pour éviter que les evts déclenchent le scroll
 			var scrollinTimeline = false;
 			var scrollinCropwindow = false;
+			var scrollinAttachment = false;
 			var pelementVu =  quelElementVu ( $('#timeline .element'), 0);
 
 			// scroll sur timeline
 			$("#timeline").scroll(function() {
 
-				if ($("#timeline").is(':animated') || scrollinCropwindow === true ) {
+				if ($("#timeline").is(':animated') || scrollinCropwindow === true || scrollinAttachment === true  ) {
 					console.log("catched timelinescroll");
 					return;
 				}
@@ -200,12 +205,22 @@ var Roots = {
 				var elementVu = quelElementVu ( $('#timeline .element'), remappedScroll);
 
 				if ( elementVu.data("post") !== pelementVu.data("post") ) {
-					console.log("diffElement");
-					console.log(pelementVu);
-					console.log(elementVu);
+
 					pelementVu = elementVu;
-					var postVu = activePost ( elementVu );
+
+					$("#timeline .active").removeClass("active");
+					var elesVu = activeElemnts ( elementVu, $('#timeline .element') );
+
+					$("#cropwindow .active").removeClass("active");
+					var postVu = activeElemnts ( elementVu, $('#cropwindow article') );
 					scrollTo ( "#cropwindow", postVu );
+
+					$("#attachmentCol .active").removeClass("active");
+					var attachmentVu = activeElemnts ( elementVu, $('#attachmentCol a') );
+					if ( attachmentVu !== false ) {
+						scrollTo ( "#attachmentCol", attachmentVu );
+					}
+
 				}
 
 			});
@@ -213,7 +228,7 @@ var Roots = {
 			// scroll sur articles
 			$("#cropwindow").scroll(function() {
 
-				if ($("#cropwindow").is(':animated') || scrollinTimeline === true) {
+				if ($("#cropwindow").is(':animated') || scrollinTimeline === true || scrollinAttachment === true ) {
 					console.log("catched cropwindowscroll");
 					return;
 				}
@@ -223,31 +238,64 @@ var Roots = {
 				console.log("cropwindow");
 
 				var scrollState = $("#cropwindow").scrollTop();
-
-
-				// l'article en vu
-				var elementVu = quelElementVu ( $('#cropwindow article'), scrollState);
-
-				// on trouve le rect qui correspond dans la timeline
-				var rectVu = activeRect ( elementVu );
-
-				// on place le scroll dessus, et le repère sur le scroll
 				$("#timeline").scrollTop(scrollState);
 
-				// hauteur relative à la page
+				var remappedScroll = updatePosNavID();
+
+				var elementVu = quelElementVu ( $('#cropwindow article'), scrollState);
+
+				console.log('elementVu.data("post") : ' + elementVu.data("post"));
+				console.log('pelementVu.data("post") : ' + pelementVu.data("post"));
+
+				if ( elementVu.data("post") !== pelementVu.data("post") ) {
+
+					pelementVu = elementVu;
+
+					$("#timeline .active").removeClass("active");
+					var elesVu = activeElemnts ( elementVu, $('#timeline .element') );
+
+					$("#cropwindow .active").removeClass("active");
+					var postVu = activeElemnts ( elementVu, $('#cropwindow article') );
+
+					$("#attachmentCol .active").removeClass("active");
+					var attachmentVu = activeElemnts ( elementVu, $('#attachmentCol a') );
+					if ( attachmentVu !== false ) {
+						scrollTo ( "#attachmentCol", attachmentVu );
+					}
+				}
+
+			});
+
+			// scroll sur articles
+			$("#attachmentCol").scroll(function() {
+
+				if ( $("#attachmentCol").is(':animated') || scrollinTimeline === true || scrollinCropwindow === true ) {
+					console.log("catched attachmentColscroll");
+					return;
+				}
+
+				scrollinAttachment = true;
+
+				console.log("attachmentCol");
 
 
+				var scrollState = $("#attachmentCol").scrollTop();
 
-				//console.log("elementVu : ");
-				//console.log( elementVu );
+				var elementVu = quelElementVu ( $('#attachmentCol a'), scrollState);
 
-				//var postVu = activePost ( elementVu );
+				$("#timeline .active").removeClass("active");
+				var elesVu = activeElemnts ( elementVu, $('#timeline .element') );
+				elesVuTop = elesVu.offset().top;
+				$("#timeline").scrollTop(elesVuTop);
 
-				//scrollTo ( "#cropwindow", postVu );
+				$("#cropwindow .active").removeClass("active");
+				var postVu = activeElemnts ( elementVu, $('#cropwindow article') );
+				scrollTo ( "#cropwindow", postVu );
 
-				//var postVu = activeRect ( elementVu );
-
-				//scrollTo ( "#timeline", postVu );
+/*
+				$("#attachmentCol .active").removeClass("active");
+				var attachmentVu = activeElemnts ( elementVu, $('#attachmentCol a') );
+*/
 
 			});
 
@@ -256,6 +304,7 @@ var Roots = {
 				if ( scrollinCropwindow === true) {
 					scrollinTimeline = false;
 					scrollinCropwindow = false;
+					scrollinAttachment = false;
 				}
 			});
 			$("#timeline").on('scrollstop', function() {
@@ -263,6 +312,15 @@ var Roots = {
 				if ( scrollinTimeline === true) {
 					scrollinTimeline = false;
 					scrollinCropwindow = false;
+					scrollinAttachment = false;
+				}
+			});
+			$("#attachmentCol").on('scrollstop', function() {
+				console.log("attachmentColstop");
+				if ( scrollinAttachment === true) {
+					scrollinTimeline = false;
+					scrollinCropwindow = false;
+					scrollinAttachment = false;
 				}
 			});
 		});

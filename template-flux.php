@@ -36,10 +36,10 @@ $getallposts = new WP_Query( array(
 				$minpassed = ( current_time( 'timestamp', 0 ) - get_post_time('U', false) ) / 60;
 				//$auteurpos = ( (get_the_author_meta('ID')-1) / count(get_users()) ) * 100;
 
-				$minpassedpercent = ( $minpassed / $oldestpostUnix ) *100;
+				$minpassedpercent = ( $minpassed / $oldestpostUnix ) ;
 
 				?>
-				<div data-post="<?php the_ID(); ?>" class="element" <?php post_class(); ?> style="top: <?php echo $minpassedpercent ?>%;" data-auteur="<?php echo get_the_author_meta('ID')?>" data-minutesecoulees="<?php echo $minpassed ?>">
+				<div data-post="<?php the_ID(); ?>" class="element" <?php post_class(); ?> data-ancienetepercent="<?php echo $minpassedpercent ?>" data-auteur="<?php echo get_the_author_meta('ID')?>" data-minutesecoulees="<?php echo $minpassed ?>">
 					<div class="content">
 					</div>
 				</div>
@@ -58,10 +58,11 @@ $getallposts = new WP_Query( array(
 			while ($getallposts->have_posts()) : $getallposts->the_post() ?>
 			<article data-post="<?php the_ID(); ?>" <?php post_class(); ?> style="">
 					<div class="content fee-group">
-					  <div class="fee-buttons"></div>
+						<div class="fee-buttons"></div>
 						<header class="name">
-							<div class="meta">
-								<?php get_template_part('templates/entry-meta'); ?>
+							<div data-auteur="<?php echo get_the_author_meta('ID')?>" class="meta">
+								<auteur><?php echo get_the_author(); ?></auteur>
+								<time class="published" datetime="<?php echo get_the_time('c'); ?>"><?php echo get_the_date(); ?></time>
 							</div>
 							<a title="Permanent Link to <?php the_title_attribute(); ?>" href="<?php the_permalink() ?>"><h2><?php the_title(); ?></h2></a>
 

@@ -203,27 +203,34 @@ a {
 
 					#navID {
 						position: absolute;
-						background-color: #333;
-						width:150px;
-						height:2px;
-						margin-left: -25px;
+						background-color: #555;
+						width: 150%;
+						height: 2px;
+						margin-left: -72.5%;
 						z-index: 0;
 					}
 
 					.element {
-						height:15px;
+						height:2px;
 						width: 35%;
 						min-height: 2px;
 						position: absolute;
+						top: 0;
 						background-color: rgba(150,150,150,.4);
 						//border: 3px solid @green;
 						border-top: 0px solid #aaa;
 						transition: all .3s;
 						margin-left: -55%;
 
+						transition: top 0s ease-out, height .8s ease-out, color .8s ease-out, opacity .8s;
+
+						.js & {
+							opacity: 0;
+						}
 
 						&.active {
-							background-color: @orange;
+							background-color: rgb(255, 46, 0, 1);
+							transition: top .4s ease-out, height .4s .6s ease-out, color 0s ease-out, opacity .8s .2s;
 						}
 
 						&::before {
@@ -232,15 +239,12 @@ a {
 
 						&[data-auteur='2'] {
 							margin-left: -30%;
-							border-color: @orange;
 						}
 						&[data-auteur='3'] {
 							margin-left: -5%;
-							border-color: @red;
 						}
 						&[data-auteur='4'] {
 							margin-left: 20%;
-							border-color: @blue;
 						}
 
 					}
@@ -269,21 +273,66 @@ a {
 					article {
 						max-width: 700px;
 						margin: auto;
-						padding: 15px;
-						margin-bottom: 15px;
+						padding: 25px;
+						padding-top: 25px;
+						padding-bottom: 50px;
+						margin-bottom: 25px;
 
 
 						&.active {
-							background-color: #333;
-							color:#fff;
-
-							span {
-								color:#fff;
-							}
 
 							h2 {
-								color: #fff;
+								color: @red;
 							}
+
+							.meta {
+								auteur {
+									color: @red;
+									float: none;
+									margin-left: 0;
+
+
+								}
+								time {
+									color: @red;
+								}
+
+							}
+
+						}
+
+						.meta {
+
+							&[data-auteur='2'] {
+								margin-left: 25%;
+							}
+							&[data-auteur='3'] {
+								margin-left: 50%;
+							}
+							&[data-auteur='4'] {
+								margin-left: 75%;
+							}
+
+							margin-bottom: 15px;
+
+							auteur {
+								float: none;
+								margin-left: 0;
+								display: block;
+
+							}
+							time {
+								float: none;
+								display: block;
+							}
+						}
+
+						p, span {
+							font-size: 1rem;
+						}
+
+						a {
+							color: @orange;
 						}
 
 						.gmail_extra {
@@ -315,15 +364,34 @@ a {
 				position: relative;
 				display: inline-block;
 
-				img {
-					max-width: 100%;
-					height: auto;
+				a {
+
+					display: block;
+					opacity:.4;
+
+					&.active {
+						opacity:1;
+
+
+					}
+
+					&:hover {
+						opacity:1;
+					}
+
+					img {
+						max-width: 100%;
+						height: auto;
+					}
 				}
 			}
 		}
 	}
 }
 
+footer {
+	display: none;
+}
 
 /* ==========================================================================
    Sidebar
