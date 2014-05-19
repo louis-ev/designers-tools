@@ -62,14 +62,15 @@ function scrollTo( container, eles) {
 			eles[0].offsetTop
 		);
 */
-	$(container).animate({
-		scrollTop : eles[0].offsetTop
-	}, {
-		queue: false,
-		duration: 200,
-		easing: "easeInOutQuint"
-    });
-
+	if ( eles[0] !== undefined ) {
+		$(container).animate({
+			scrollTop : eles[0].offsetTop
+		}, {
+			queue: false,
+			duration: 200,
+			easing: "easeInOutQuint"
+		});
+	}
 
 
 }
@@ -161,6 +162,24 @@ var Roots = {
 				$(this).css("top", eles.offset().top);
 			});
 */
+
+			// on retire toutes les PJ de la colonne des articles
+			$("#timeline .element").each(function () {
+				var titreMail = $(this).data("title");
+/*
+				var memeSujet = $('article .name h2').filter(function() {
+					return $(this).text() === titreMail;
+				});
+*/
+				//console.log(memeSujet);
+				$(this).css("background-color", "#" + intToARGB(hashCode(titreMail)).substring(0,6) );
+
+			});
+
+			$("#timeline").addClass("offhovered");
+			$("#timeline").hover(function() {
+				$(this).toggleClass("offhovered");
+			});
 
 			// on supprime les styles dans les mails
 			$("article .entry-summary *").removeAttr( 'style' );

@@ -39,7 +39,7 @@ $getallposts = new WP_Query( array(
 				$minpassedpercent = ( $minpassed / $oldestpostUnix ) ;
 
 				?>
-				<div data-post="<?php the_ID(); ?>" class="element" <?php post_class(); ?> data-ancienetepercent="<?php echo $minpassedpercent ?>" data-auteur="<?php echo get_the_author_meta('ID')?>" data-minutesecoulees="<?php echo $minpassed ?>">
+				<div data-post="<?php the_ID(); ?>" class="element" <?php post_class(); ?> data-ancienetepercent="<?php echo $minpassedpercent ?>" data-auteur="<?php echo get_the_author_meta('ID')?>" data-minutesecoulees="<?php echo $minpassed ?>" data-title="<?php the_title(); ?>">
 					<div class="content">
 					</div>
 				</div>
